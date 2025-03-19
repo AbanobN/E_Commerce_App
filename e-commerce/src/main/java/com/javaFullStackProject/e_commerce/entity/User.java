@@ -3,9 +3,10 @@ import com.javaFullStackProject.e_commerce.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
 @Entity
-@Data
 @Table(name = "users")
+@Data
 public class User {
 
     @Id
@@ -23,5 +24,6 @@ public class User {
     @Lob
     @Column(columnDefinition = "longblob")
     private byte[] img;
+
 
 }

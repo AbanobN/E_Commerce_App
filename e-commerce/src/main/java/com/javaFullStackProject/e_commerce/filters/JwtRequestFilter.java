@@ -1,5 +1,6 @@
 package com.javaFullStackProject.e_commerce.filters;
 
+import com.javaFullStackProject.e_commerce.services.jwt.UserDetailsServiceImpl;
 import com.javaFullStackProject.e_commerce.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private final  UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     private final JwtUtil jwtUtil;
 
@@ -35,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = userDetailsService.loadUserByUserName(userName);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 
             if(jwtUtil.validateToken(token , userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,null);
