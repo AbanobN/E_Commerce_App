@@ -36,8 +36,8 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final AuthService authService;
 
-    private final String HEADER_STRING = "Bearer";
-    private final String TOKEN_PERFIX = "Authorization";
+    public static final String TOKEN_PREFIX = "Bearer";
+    public static final String HEADER_STRING = "Authorization";
 
     @PostMapping("/authenticate")
     public void createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws JSONException, IOException {
@@ -59,7 +59,10 @@ public class AuthController {
                     .toString()
             );
 
-            response.addHeader(HEADER_STRING, TOKEN_PERFIX + jwt);
+            response.addHeader("Access-Control-Expose-Headers", "Authorization");
+            response.addHeader("Access-Control-Expose-Headers", "Authorization, X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept, X-Custom-header");
+
+            response.addHeader(HEADER_STRING, TOKEN_PREFIX + jwt);
         }
     }
 

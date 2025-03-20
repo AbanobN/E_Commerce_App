@@ -17,7 +17,7 @@ import java.util.Map;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleCorsFilter implements Filter {
 
-    @Value("${app.client.url}")
+    @Value(value = "${app.client.url}")
     private String clientAppUrl = "";
 
     @Override
