@@ -6,16 +6,42 @@ import com.javaFullStackProject.e_commerce.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public Category createCategory(CategoryDto categoryDto){
+    @Override
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        // Check for duplicate category name
+        Optional<Category> existingCategory = categoryRepository.findByName(categoryDto.getName());
+        if (existingCategory.isPresent()) {
+            throw new IllegalStateException("Category with name '" + categoryDto.getName() + "' already exists");
+        }
+
+        // Map DTO to entity
         Category category = new Category();
         category.setName(categoryDto.getName());
         category.setDescription(categoryDto.getDescription());
-        return categoryRepository.save(category);
+
+        // Save and map back to DTO
+        Category savedCategory = categoryRepository.save(category);
+        CategoryDto resultDto = new CategoryDto();
+        resultDto.setId(savedCategory.getId());
+        resultDto.setName(savedCategory.getName());
+        resultDto.setDescription(savedCategory.getDescription());
+
+        return resultDto;
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new IllegalStateException("Category with ID " + id + " not found");
+        }
+        categoryRepository.deleteById(id);
     }
 }

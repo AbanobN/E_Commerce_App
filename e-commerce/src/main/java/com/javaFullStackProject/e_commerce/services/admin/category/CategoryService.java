@@ -4,5 +4,6 @@ import com.javaFullStackProject.e_commerce.dto.CategoryDto;
 import com.javaFullStackProject.e_commerce.entity.Category;
 
 public interface CategoryService {
-    public Category createCategory(CategoryDto categoryDto);
+    CategoryDto createCategory(CategoryDto categoryDto);
+    void deleteCategory(Long id);
 }

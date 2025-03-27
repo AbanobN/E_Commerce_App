@@ -7,10 +7,8 @@ import com.javaFullStackProject.e_commerce.services.admin.category.CategoryServi
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -20,8 +18,16 @@ public class AdminCategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/category")
-    public ResponseEntity<Category> createCategory(@RequestBody CategoryDto categoryDto){
-        Category category = categoryService.createCategory(categoryDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(category);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
+        CategoryDto createdCategory = categoryService.createCategory(categoryDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+    }
+
+    @DeleteMapping("/category/{id}")
+    @PreAuthorize("hasRole('ADMIN')") // Restrict to admins
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build(); // 204 No Content on success
     }
 }
