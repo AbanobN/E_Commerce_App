@@ -1,17 +1,14 @@
 package com.javaFullStackProject.e_commerce.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.javaFullStackProject.e_commerce.dto.AuthenticationRequest;
+import com.javaFullStackProject.e_commerce.dto.AuthenticationResponse;
 import com.javaFullStackProject.e_commerce.dto.SignupRequest;
 import com.javaFullStackProject.e_commerce.dto.UserDto;
 import com.javaFullStackProject.e_commerce.entity.User;
 import com.javaFullStackProject.e_commerce.repository.UserRepository;
 import com.javaFullStackProject.e_commerce.services.auth.AuthService;
 import com.javaFullStackProject.e_commerce.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,60 +16,61 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
-    private final AuthService authService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-    public static final String TOKEN_PREFIX = "Bearer";
-    public static final String HEADER_STRING = "Authorization";
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private UserRepository userRepository; // Added to fetch user details
 
     @PostMapping("/authenticate")
-    public void createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws JSONException, IOException {
-
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authRequest) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword()));
-        }catch (BadCredentialsException err){
-            throw new BadCredentialsException("Incorrect Username or Password");
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"error\": \"Invalid credentials\", \"message\": \"Incorrect email or password\"}");
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUserName());
-        Optional<User> optionalUser = userRepository.findFirstByEmail(userDetails.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-        if(optionalUser.isPresent()){
-            response.getWriter().write(new JSONObject()
-                    .put("userId" , optionalUser.get().getId())
-                    .put("role" , optionalUser.get().getRole())
-                    .toString()
-            );
+        // Fetch user entity to build UserDto
+        User user = userRepository.findByEmail(authRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found after authentication"));
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setName(user.getName());
+        userDto.setUserRole(user.getRole());
 
-            response.addHeader("Access-Control-Expose-Headers", "Authorization");
-            response.addHeader("Access-Control-Expose-Headers", "Authorization, X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept, X-Custom-header");
-
-            response.addHeader(HEADER_STRING, TOKEN_PREFIX + jwt);
-        }
+        // Return both JWT and UserDto in the response
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, userDto));
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
-        if(authService.hasUserWithEmail(signupRequest.getEmail())){
-            return new ResponseEntity<>("User Already Exists", HttpStatus.NOT_ACCEPTABLE);
+    public ResponseEntity<?> signUp(@RequestBody SignupRequest signupRequest) {
+        if (authService.hasUserWithEmail(signupRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("{\"error\": \"Email already exists\", \"message\": \"User with this email already registered\"}");
         }
 
         UserDto userDto = authService.createUser(signupRequest);
-        return new ResponseEntity<>(userDto,HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 }

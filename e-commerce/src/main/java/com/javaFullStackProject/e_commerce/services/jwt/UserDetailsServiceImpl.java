@@ -1,17 +1,15 @@
 package com.javaFullStackProject.e_commerce.services.jwt;
 
+import com.javaFullStackProject.e_commerce.entity.User;
 import com.javaFullStackProject.e_commerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.javaFullStackProject.e_commerce.entity.User;
 
-
-
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.Collections;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -20,13 +18,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findFirstByEmail(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        if(optionalUser.isEmpty()){
-            throw new UsernameNotFoundException("User Name Not Found" , null);
-        }
-
-        return new org.springframework.security.core.userdetails.User(optionalUser.get().getEmail(),  optionalUser.get().getPassword() , new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+        );
     }
 }

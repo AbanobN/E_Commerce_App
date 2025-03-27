@@ -4,9 +4,7 @@ import com.javaFullStackProject.e_commerce.dto.SignupRequest;
 import com.javaFullStackProject.e_commerce.dto.UserDto;
 
 public interface AuthService {
-    public UserDto createUser(SignupRequest signupRequest);
-
-    public Boolean hasUserWithEmail(String email);
-
-    public void createAdminAccount();
+    UserDto createUser(SignupRequest signupRequest);
+    boolean hasUserWithEmail(String email);
+    void createAdminAccount();
 }

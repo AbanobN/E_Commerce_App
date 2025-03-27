@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserStorgeService } from './services/storge/user-storge.service';
+import { UserStorageService } from './services/storage/user-storage.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,22 +9,22 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit{
   title = 'ECommerceWeb';
-  isCustomerLoggedIn : boolean = UserStorgeService.isCustomerLoggedIn();
-  isAdminLoggedIn : boolean = UserStorgeService.isAdminLoggedIn();
+  isCustomerLoggedIn : boolean = UserStorageService.isCustomerLoggedIn();
+  isAdminLoggedIn : boolean = UserStorageService.isAdminLoggedIn();
 
   constructor(private router: Router){}
 
   ngOnInit() : void{
     this.router.events.subscribe(
       event => {
-        this.isCustomerLoggedIn = UserStorgeService.isCustomerLoggedIn();
-        this.isAdminLoggedIn = UserStorgeService.isAdminLoggedIn();
+        this.isCustomerLoggedIn = UserStorageService.isCustomerLoggedIn();
+        this.isAdminLoggedIn = UserStorageService.isAdminLoggedIn();
       }
     )
   }
 
   logout() {
-    UserStorgeService.signOut();
+    UserStorageService.signOut();
     this.router.navigateByUrl("/login");
   }
 }

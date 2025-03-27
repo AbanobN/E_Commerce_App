@@ -1,6 +1,6 @@
 package com.javaFullStackProject.e_commerce.config;
 
-import com.javaFullStackProject.e_commerce.filters.JwtRequestFilter;
+import com.javaFullStackProject.e_commerce.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,43 +12,58 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
 
-    private final JwtRequestFilter authFilter;
-
+    private final JwtAuthenticationFilter authFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/authenticate","/sign-up","/order/**")
-                .permitAll()
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/**")
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/authenticate", "/sign-up").permitAll()
+                        .requestMatchers("/order/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().denyAll()
+                )
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .exceptionHandling(exception ->
+                        exception.accessDeniedHandler(accessDeniedHandler())
+                )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(
+                    "{\"error\": \"Access Denied\", \"message\": \"You don't have permission to access this resource\"}"
+            );
+        };
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }
