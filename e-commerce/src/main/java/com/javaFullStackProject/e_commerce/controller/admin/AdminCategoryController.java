@@ -25,9 +25,11 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/category/{id}")
-    @PreAuthorize("hasRole('ADMIN')") // Restrict to admins
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build(); // 204 No Content on success
+        return ResponseEntity.noContent().build();
     }
+
+
 }
