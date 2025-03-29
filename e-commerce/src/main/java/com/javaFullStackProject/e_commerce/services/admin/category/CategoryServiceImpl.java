@@ -6,7 +6,9 @@ import com.javaFullStackProject.e_commerce.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,19 @@ public class CategoryServiceImpl implements CategoryService {
             throw new IllegalStateException("Category with ID " + id + " not found");
         }
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CategoryDto> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(category -> {
+                    CategoryDto dto = new CategoryDto();
+                    dto.setId(category.getId());
+                    dto.setName(category.getName());
+                    dto.setDescription(category.getDescription());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }
