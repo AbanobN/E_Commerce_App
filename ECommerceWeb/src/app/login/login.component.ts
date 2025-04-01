@@ -43,11 +43,9 @@ export class LoginComponent{
 
     this.authService.login(email, password).subscribe({
         next: (success) => {
-            console.log("Login success:", success);
             if (success) {
                 const isAdmin = UserStorageService.isAdminLoggedIn();
                 const isCustomer = UserStorageService.isCustomerLoggedIn();
-                console.log("Is Admin:", isAdmin, "Is Customer:", isCustomer);
                 if (isAdmin) {
                     this.router.navigateByUrl("admin/dashboard");
                 } else if (isCustomer) {
