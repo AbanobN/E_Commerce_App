@@ -42,13 +42,22 @@ public class AdminProductController {
     @DeleteMapping("/product/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        adminProductService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        boolean deleted = adminProductService.deleteProduct(id);
+        if(deleted){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<ProductDto> products = adminProductService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/search/{title}")
+    public ResponseEntity<List<ProductDto>> getAllProductsByName(@PathVariable String title) {
+        List<ProductDto> products = adminProductService.getAllProductsByName(title);
         return ResponseEntity.ok(products);
     }
 }

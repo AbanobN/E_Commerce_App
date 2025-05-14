@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface AdminProductService {
     public ProductDto createProduct(ProductDto productDto) throws IOException;
-    void deleteProduct(Long id);
+    boolean deleteProduct(Long id);
     public List<ProductDto> getAllProducts();
+    public List<ProductDto> getAllProductsByName(String Title);
 }

@@ -8,6 +8,7 @@ import com.javaFullStackProject.e_commerce.repository.CategoryRepository;
 import com.javaFullStackProject.e_commerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,19 +51,22 @@ public class AdminProductServiceImpl implements AdminProductService{
         productResult.setPrice(savedProduct.getPrice());
         productResult.setImg(savedProduct.getImg());
         productResult.setCategoryId(savedProduct.getCategory().getId());
-
+        productResult.setCategoryName(savedProduct.getCategory().getName());
         return productResult;
     }
 
     @Override
-    public void deleteProduct(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new IllegalStateException("Product with ID " + id + " not found");
+    public boolean deleteProduct(Long id) {
+        Optional<Product>  optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            productRepository.deleteById(id);
+            return true;
         }
-        productRepository.deleteById(id);
+        return false;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
@@ -74,6 +78,26 @@ public class AdminProductServiceImpl implements AdminProductService{
                     dto.setPrice(product.getPrice());
                     dto.setImg(product.getImg());
                     dto.setCategoryId(product.getCategory().getId());
+                    dto.setCategoryName(product.getCategory().getName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductDto> getAllProductsByName(String Title) {
+        List<Product> products = productRepository.findAllByNameContaining(Title);
+        return products.stream()
+                .map(product -> {
+                    ProductDto dto = new ProductDto();
+                    dto.setId(product.getId());
+                    dto.setName(product.getName());
+                    dto.setDescription(product.getDescription());
+                    dto.setPrice(product.getPrice());
+                    dto.setImg(product.getImg());
+                    dto.setCategoryId(product.getCategory().getId());
+                    dto.setCategoryName(product.getCategory().getName());
                     return dto;
                 })
                 .collect(Collectors.toList());
