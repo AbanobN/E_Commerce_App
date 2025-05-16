@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
+  
   products: any[] = [];
   searchProductForm: FormGroup;
 

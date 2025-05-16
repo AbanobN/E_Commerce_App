@@ -2,8 +2,11 @@ package com.javaFullStackProject.e_commerce.services.auth;
 
 import com.javaFullStackProject.e_commerce.dto.SignupRequest;
 import com.javaFullStackProject.e_commerce.dto.UserDto;
+import com.javaFullStackProject.e_commerce.entity.Order;
 import com.javaFullStackProject.e_commerce.entity.User;
+import com.javaFullStackProject.e_commerce.enums.OrderStatus;
 import com.javaFullStackProject.e_commerce.enums.UserRole;
+import com.javaFullStackProject.e_commerce.repository.OrderRepository;
 import com.javaFullStackProject.e_commerce.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,9 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
 
     @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
@@ -28,6 +34,14 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(UserRole.CUSTOMER);
 
         User createdUser = userRepository.save(user);
+
+        Order order = new Order();
+        order.setAmount(0L);
+        order.setTotalAmount(0L);
+        order.setDiscount(0L);
+        order.setUser(createdUser);
+        order.setOrderStatus(OrderStatus.Pending);
+        orderRepository.save(order);
 
         UserDto userDto = new UserDto();
         userDto.setId(createdUser.getId());
