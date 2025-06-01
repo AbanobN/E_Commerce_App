@@ -12,6 +12,18 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  getAllCoupons(): Observable<any>{
+    return this.http.get(BASIC_URL + "api/admin/coupons", {
+      headers: this.createAuthorizationHeader()
+    })
+  }
+
+  addCoupon(couponDto: any): Observable<any>{
+    return this.http.post(BASIC_URL + "api/admin/coupons", couponDto, {
+      headers: this.createAuthorizationHeader()
+    })
+  }
+
   addCategory(categoryDto: any): Observable<any>{
     return this.http.post(BASIC_URL + "api/admin/category", categoryDto, {
       headers: this.createAuthorizationHeader()
@@ -36,17 +48,18 @@ export class AdminService {
     })
   }
 
+  getAllProductsByName(name: any): Observable<any>{
+    return this.http.get(BASIC_URL + `api/admin/search/${name}`, {
+      headers: this.createAuthorizationHeader()
+    })
+  }
+
   getAllProducts(): Observable<any>{
     return this.http.get(BASIC_URL + "api/admin/products", {
       headers: this.createAuthorizationHeader()
     })
   }
 
-  getAllProductsByName(name: any): Observable<any>{
-    return this.http.get(BASIC_URL + `api/admin/search/${name}`, {
-      headers: this.createAuthorizationHeader()
-    })
-  }
 
   private createAuthorizationHeader(): HttpHeaders{
     const token = UserStorageService.getToken();

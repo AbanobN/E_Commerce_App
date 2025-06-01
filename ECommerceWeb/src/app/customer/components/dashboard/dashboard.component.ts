@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CustomerService } from '../../services/customer.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +17,7 @@ export class DashboardComponent {
   constructor(
     private customerService: CustomerService,
     private fb: FormBuilder,
+    private snackBar: MatSnackBar
     ){}
   
     ngOnInit(){
@@ -45,7 +48,17 @@ export class DashboardComponent {
       })
     }
 
-    addToCard(productId: any){
-
-    }
+    addToCart(productId: any) {
+      this.customerService.addToCart(productId).subscribe({
+          next: (res) => {
+              this.snackBar.open('Product added to cart successfully', 'Close', { duration: 5000 });
+          },
+          error: (err: HttpErrorResponse) => {
+            const message = typeof err.error === 'string'
+                ? err.error
+                : err.error?.message || 'Failed to add product to cart';
+            this.snackBar.open(message, 'Close', { duration: 5000 });
+        }
+      });
+  }
 }

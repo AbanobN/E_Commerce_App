@@ -53,6 +53,7 @@ public class AuthController {
         // Fetch user entity to build UserDto
         User user = userRepository.findByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found after authentication"));
+
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setEmail(user.getEmail());

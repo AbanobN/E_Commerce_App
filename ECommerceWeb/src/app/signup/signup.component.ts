@@ -45,7 +45,7 @@ export class SignupComponent  implements OnInit {
     }
     this.authService.register(this.signupForm.value).subscribe(
       (responce) =>{
-        this.snackBar.open("Sign up Successful!" , "close", {duration: 50000});
+        this.snackBar.open("Sign up Successful!" , "close", {duration: 5000});
         this.router.navigateByUrl("/login")
       },
       (error) =>{

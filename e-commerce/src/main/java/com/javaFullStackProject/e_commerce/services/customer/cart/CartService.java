@@ -1,0 +1,10 @@
+package com.javaFullStackProject.e_commerce.services.customer.cart;
+
+import com.javaFullStackProject.e_commerce.dto.AddProductInCartDto;
+import com.javaFullStackProject.e_commerce.dto.OrderDto;
+import org.springframework.http.ResponseEntity;
+
+public interface CartService {
+    ResponseEntity<?> addProductToCart(AddProductInCartDto addProductInCartDto);
+    OrderDto getCartByUserId(Long userId);
+}

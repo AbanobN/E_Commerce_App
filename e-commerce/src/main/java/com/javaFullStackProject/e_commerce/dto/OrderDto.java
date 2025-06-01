@@ -1,20 +1,15 @@
-package com.javaFullStackProject.e_commerce.entity;
+package com.javaFullStackProject.e_commerce.dto;
 
 import com.javaFullStackProject.e_commerce.enums.OrderStatus;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
 @Data
-@Table(name = "orders")
-public class Order {
+public class OrderDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String orderDescription;
@@ -35,12 +30,7 @@ public class Order {
 
     private UUID trackingId;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private String userName;
 
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-    private List<CartItem> cartItems;
-
+    private List<CartItemsDto> cartItems;
 }

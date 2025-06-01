@@ -42,7 +42,7 @@ export class UserStorageService {
     if (!user) {
       return '';
     }
-    return user.id || ''; // Match UserDto's "id" field
+    return user.id || '';
   }
 
   static getUserRole(): string {
