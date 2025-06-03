@@ -2,6 +2,7 @@ package com.javaFullStackProject.e_commerce.controller.customer;
 
 import com.javaFullStackProject.e_commerce.dto.AddProductInCartDto;
 import com.javaFullStackProject.e_commerce.dto.OrderDto;
+import com.javaFullStackProject.e_commerce.exceptions.ValidationException;
 import com.javaFullStackProject.e_commerce.services.customer.cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,15 @@ public class CartController {
     public ResponseEntity<?> getCartByUserId(@PathVariable Long userId){
         OrderDto orderDto = cartService.getCartByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(orderDto);
+    }
+
+    @GetMapping("/coupon/{userId}/{couponCode}")
+    public ResponseEntity<?> applyCoupon(@PathVariable Long userId, @PathVariable String couponCode){
+        try {
+            OrderDto orderDto = cartService.applyCoupon(userId, couponCode);
+            return ResponseEntity.ok(orderDto);
+        } catch (ValidationException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 }

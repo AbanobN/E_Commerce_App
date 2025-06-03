@@ -15,6 +15,13 @@ export class CustomerService {
     private http: HttpClient
   ) { }
 
+  applyCoupon(couponCode: any): Observable<any>{
+    const userId = UserStorageService.getUserId()
+  return this.http.get(BASIC_URL + `api/customer/coupon/${userId}/${couponCode}`, {
+    headers: this.createAuthorizationHeader()
+  });
+  }
+
   getCartByUserId(): Observable<any>{
     const userId = UserStorageService.getUserId()
   return this.http.get(BASIC_URL + `api/customer/cart/${userId}`, {

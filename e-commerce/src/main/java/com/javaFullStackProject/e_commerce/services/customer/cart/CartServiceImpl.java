@@ -3,20 +3,16 @@ package com.javaFullStackProject.e_commerce.services.customer.cart;
 import com.javaFullStackProject.e_commerce.dto.AddProductInCartDto;
 import com.javaFullStackProject.e_commerce.dto.CartItemsDto;
 import com.javaFullStackProject.e_commerce.dto.OrderDto;
-import com.javaFullStackProject.e_commerce.entity.CartItem;
-import com.javaFullStackProject.e_commerce.entity.Order;
-import com.javaFullStackProject.e_commerce.entity.Product;
-import com.javaFullStackProject.e_commerce.entity.User;
+import com.javaFullStackProject.e_commerce.entity.*;
 import com.javaFullStackProject.e_commerce.enums.OrderStatus;
-import com.javaFullStackProject.e_commerce.repository.CartItemsRepository;
-import com.javaFullStackProject.e_commerce.repository.OrderRepository;
-import com.javaFullStackProject.e_commerce.repository.ProductRepository;
-import com.javaFullStackProject.e_commerce.repository.UserRepository;
+import com.javaFullStackProject.e_commerce.exceptions.ValidationException;
+import com.javaFullStackProject.e_commerce.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +30,9 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CouponRepository couponRepository;
 
     @Override
     public ResponseEntity<?> addProductToCart(AddProductInCartDto addProductInCartDto){
@@ -78,7 +77,6 @@ public class CartServiceImpl implements CartService {
     }
 
 
-
     @Override
     public OrderDto getCartByUserId(Long userId){
 
@@ -94,7 +92,42 @@ public class CartServiceImpl implements CartService {
         orderDto.setTotalAmount(activeOrder.getTotalAmount());
         orderDto.setCartItems(cartItemsDto);
 
+        if(activeOrder.getCoupon() != null){
+            orderDto.setCouponName(activeOrder.getCoupon().getName());
+        }
+
         return orderDto;
+    }
+
+
+    @Override
+    public OrderDto applyCoupon(Long userId, String couponCode){
+
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(userId, OrderStatus.Pending);
+        Coupon coupon = couponRepository.findByCode(couponCode).orElseThrow(() -> new ValidationException("Coupon Not Found. "));
+
+        if(couponIsExpired(coupon)){
+            throw new ValidationException("Coupon Is Expired");
+        }
+
+        double discountAmount = ((coupon.getDiscount() / 100.0) * activeOrder.getTotalAmount());
+        double netAmount = activeOrder.getTotalAmount() - discountAmount;
+
+        activeOrder.setAmount((long)netAmount);
+        activeOrder.setDiscount((long)discountAmount);
+
+        activeOrder.setCoupon(coupon);
+
+        orderRepository.save(activeOrder);
+
+        return activeOrder.getOrderDto();
+    }
+
+    private boolean couponIsExpired(Coupon coupon){
+        Date today = new Date();
+        Date expirationDate = coupon.getExpirationDate();
+
+        return expirationDate != null && today.after(expirationDate);
     }
 }
 

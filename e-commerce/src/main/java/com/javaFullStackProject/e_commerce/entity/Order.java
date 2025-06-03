@@ -1,5 +1,6 @@
 package com.javaFullStackProject.e_commerce.entity;
 
+import com.javaFullStackProject.e_commerce.dto.OrderDto;
 import com.javaFullStackProject.e_commerce.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -39,8 +40,35 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "coupon_id", referencedColumnName = "id")
+    private Coupon coupon;
+
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<CartItem> cartItems;
+
+
+    public OrderDto getOrderDto(){
+        OrderDto orderDto = new OrderDto();
+
+        orderDto.setId(id);
+        orderDto.setOrderDescription(orderDescription);
+        orderDto.setDate(date);
+        orderDto.setAddress(address);
+//        orderDto.setPayment(payment);
+//        orderDto.setTotalAmount(totalAmount);
+//        orderDto.setDiscount(discount);
+        orderDto.setAmount(amount);
+        orderDto.setOrderStatus(orderStatus);
+        orderDto.setTrackingId(trackingId);
+        orderDto.setUserName(user.getName());
+        if(coupon != null){
+            orderDto.setCouponName(coupon.getName());
+        }
+
+        return orderDto;
+    }
+
 
 }
