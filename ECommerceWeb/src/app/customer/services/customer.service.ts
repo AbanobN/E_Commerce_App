@@ -15,6 +15,16 @@ export class CustomerService {
     private http: HttpClient
   ) { }
 
+  decreaseProductQuantity(productId: any): Observable<any>{
+    const cartDto = {
+      productId: productId,
+      userId: UserStorageService.getUserId()
+    }
+    return this.http.post(BASIC_URL + `api/customer/deduction`, cartDto, {
+      headers: this.createAuthorizationHeader()
+    });
+  }
+
   increaseProductQuantity(productId: any): Observable<any>{
     const cartDto = {
       productId: productId,

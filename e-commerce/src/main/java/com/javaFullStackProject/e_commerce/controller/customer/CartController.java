@@ -27,6 +27,11 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.increaseProductQuantity(addProductInCartDto));
     }
 
+    @PostMapping("/deduction")
+    public ResponseEntity<OrderDto> decreaseProductQuantity(@RequestBody AddProductInCartDto addProductInCartDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.decreaseProductQuantity(addProductInCartDto));
+    }
+
     @GetMapping("/cart/{userId}")
     public ResponseEntity<?> getCartByUserId(@PathVariable Long userId){
         OrderDto orderDto = cartService.getCartByUserId(userId);

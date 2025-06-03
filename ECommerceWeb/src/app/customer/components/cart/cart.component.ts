@@ -32,6 +32,13 @@ export class CartComponent {
     this.getCart();
   }
 
+  decreaseQuantity(productId: any){
+    this.customerService.decreaseProductQuantity(productId).subscribe(res =>{
+      this.snackBar.open("Product Quantity Decreased" , "Close" , {duration: 5000})
+      this.getCart();
+    })
+  }
+
   increaseQuantity(productId: any){
     this.customerService.increaseProductQuantity(productId).subscribe(res =>{
       this.snackBar.open("Product Quantity Increased" , "Close" , {duration: 5000})
