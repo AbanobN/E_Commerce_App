@@ -32,6 +32,13 @@ export class CartComponent {
     this.getCart();
   }
 
+  increaseQuantity(productId: any){
+    this.customerService.increaseProductQuantity(productId).subscribe(res =>{
+      this.snackBar.open("Product Quantity Increased" , "Close" , {duration: 5000})
+      this.getCart();
+    })
+  }
+
   applyCoupon(){
     this.customerService.applyCoupon(this.couponForm.get(['code'])?.value).subscribe(res =>{
       this.snackBar.open("Coupon Applied Successfully" , "Close" , {duration: 5000})

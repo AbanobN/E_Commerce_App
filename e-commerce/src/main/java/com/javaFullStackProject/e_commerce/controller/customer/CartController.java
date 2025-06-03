@@ -22,6 +22,11 @@ public class CartController {
         return cartService.addProductToCart(addProductInCartDto);
     }
 
+    @PostMapping("/addition")
+    public ResponseEntity<OrderDto> increaseProductQuantity(@RequestBody AddProductInCartDto addProductInCartDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.increaseProductQuantity(addProductInCartDto));
+    }
+
     @GetMapping("/cart/{userId}")
     public ResponseEntity<?> getCartByUserId(@PathVariable Long userId){
         OrderDto orderDto = cartService.getCartByUserId(userId);
