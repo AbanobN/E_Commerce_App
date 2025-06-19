@@ -3,6 +3,7 @@ package com.javaFullStackProject.e_commerce.services.customer.cart;
 import com.javaFullStackProject.e_commerce.dto.AddProductInCartDto;
 import com.javaFullStackProject.e_commerce.dto.CartItemsDto;
 import com.javaFullStackProject.e_commerce.dto.OrderDto;
+import com.javaFullStackProject.e_commerce.dto.PlacedOrderDto;
 import com.javaFullStackProject.e_commerce.entity.*;
 import com.javaFullStackProject.e_commerce.enums.OrderStatus;
 import com.javaFullStackProject.e_commerce.exceptions.ValidationException;
@@ -12,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -195,7 +198,36 @@ public class CartServiceImpl implements CartService {
 
         return null;
 
+    }
 
+    @Override
+    public OrderDto placedOrder(PlacedOrderDto placedOrderDto){
+
+        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(placedOrderDto.getUserId(), OrderStatus.Pending);
+        Optional<User> optionalUser = userRepository.findById(placedOrderDto.getUserId());
+
+        if(optionalUser.isPresent()){
+            activeOrder.setOrderDescription(placedOrderDto.getOrderDescription());
+            activeOrder.setAddress(placedOrderDto.getAddress());
+            activeOrder.setDate(new Date());
+            activeOrder.setOrderStatus(OrderStatus.Placed);
+            activeOrder.setTrackingId(UUID.randomUUID());
+
+            orderRepository.save(activeOrder);
+
+            Order order = new Order();
+            order.setAmount(0L);
+            order.setTotalAmount(0L);
+            order.setDiscount(0L);
+            order.setUser(optionalUser.get());
+            order.setOrderStatus(OrderStatus.Pending);
+            orderRepository.save(order);
+
+            return activeOrder.getOrderDto();
+
+        }
+
+        return null;
     }
 }
 

@@ -2,6 +2,7 @@ package com.javaFullStackProject.e_commerce.services.customer.cart;
 
 import com.javaFullStackProject.e_commerce.dto.AddProductInCartDto;
 import com.javaFullStackProject.e_commerce.dto.OrderDto;
+import com.javaFullStackProject.e_commerce.dto.PlacedOrderDto;
 import org.springframework.http.ResponseEntity;
 
 public interface CartService {
@@ -10,4 +11,5 @@ public interface CartService {
     OrderDto applyCoupon(Long userId, String CouponCode);
     OrderDto increaseProductQuantity(AddProductInCartDto addProductInCartDto);
     OrderDto decreaseProductQuantity(AddProductInCartDto addProductInCartDto);
+    OrderDto placedOrder(PlacedOrderDto placedOrderDto);
 }

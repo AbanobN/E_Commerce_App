@@ -2,6 +2,7 @@ package com.javaFullStackProject.e_commerce.controller.customer;
 
 import com.javaFullStackProject.e_commerce.dto.AddProductInCartDto;
 import com.javaFullStackProject.e_commerce.dto.OrderDto;
+import com.javaFullStackProject.e_commerce.dto.PlacedOrderDto;
 import com.javaFullStackProject.e_commerce.exceptions.ValidationException;
 import com.javaFullStackProject.e_commerce.services.customer.cart.CartService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,11 @@ public class CartController {
     @PostMapping("/deduction")
     public ResponseEntity<OrderDto> decreaseProductQuantity(@RequestBody AddProductInCartDto addProductInCartDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(cartService.decreaseProductQuantity(addProductInCartDto));
+    }
+
+    @PostMapping("/placedOrder")
+    public ResponseEntity<OrderDto> placedOrder(@RequestBody PlacedOrderDto placedOrderDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.placedOrder(placedOrderDto));
     }
 
     @GetMapping("/cart/{userId}")
