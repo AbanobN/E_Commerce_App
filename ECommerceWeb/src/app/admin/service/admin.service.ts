@@ -12,6 +12,12 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  getPlacedOrders(): Observable<any>{
+    return this.http.get(BASIC_URL + "api/admin/placedOrders", {
+      headers: this.createAuthorizationHeader()
+    })
+  }
+  
   getAllCoupons(): Observable<any>{
     return this.http.get(BASIC_URL + "api/admin/coupons", {
       headers: this.createAuthorizationHeader()
