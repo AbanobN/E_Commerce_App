@@ -12,6 +12,12 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  postFAQ(productId: number , faqDto: any): Observable<any>{
+    return this.http.post(BASIC_URL + `api/admin/faq/${productId}`, faqDto, {
+      headers: this.createAuthorizationHeader()
+    })
+  }
+  
   changeOrderStatus(orderId: number , status: string): Observable<any>{
     return this.http.get(BASIC_URL + `api/admin/order/${orderId}/${status}`, {
       headers: this.createAuthorizationHeader()

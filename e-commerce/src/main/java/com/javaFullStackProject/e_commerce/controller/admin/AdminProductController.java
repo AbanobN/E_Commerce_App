@@ -1,8 +1,10 @@
 package com.javaFullStackProject.e_commerce.controller.admin;
 
 import com.javaFullStackProject.e_commerce.dto.CategoryDto;
+import com.javaFullStackProject.e_commerce.dto.FAQDto;
 import com.javaFullStackProject.e_commerce.dto.ProductDto;
 import com.javaFullStackProject.e_commerce.services.admin.admin_product.AdminProductService;
+import com.javaFullStackProject.e_commerce.services.admin.faq.FAQService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,16 @@ import java.util.List;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminProductController {
+
     private final AdminProductService adminProductService;
+
+    private final FAQService faqService;
+
+    @PostMapping("/faq/{productId}")
+    public ResponseEntity<FAQDto> postFAQ(@PathVariable Long productId, @RequestBody FAQDto faqDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(faqService.postFAQ(productId,faqDto));
+    }
+
 
     @PostMapping("/product")
     @PreAuthorize("hasRole('ADMIN')")
