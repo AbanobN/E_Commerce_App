@@ -7,6 +7,7 @@ import com.javaFullStackProject.e_commerce.entity.Product;
 import com.javaFullStackProject.e_commerce.repository.CategoryRepository;
 import com.javaFullStackProject.e_commerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,5 +102,35 @@ public class AdminProductServiceImpl implements AdminProductService{
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDto getProductById(Long productId){
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        return optionalProduct.map(Product::getProductDto).orElse(null);
+    }
+
+    @Override
+    public ProductDto updateProduct(Long productId, ProductDto productDto){
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        Optional<Category> optionalCategory = categoryRepository.findById(productDto.getCategoryId());
+
+        if(optionalProduct.isPresent() && optionalCategory.isPresent()){
+            Product product = optionalProduct.get();
+
+            product.setName(productDto.getName());
+            product.setPrice(productDto.getPrice());
+            product.setDescription(productDto.getDescription());
+            product.setCategory(optionalCategory.get());
+
+            if(productDto.getImg() != null){
+                product.setImg(product.getImg());
+            }
+
+            return productRepository.save(product).getProductDto();
+        }else{
+            return null;
+        }
     }
 }

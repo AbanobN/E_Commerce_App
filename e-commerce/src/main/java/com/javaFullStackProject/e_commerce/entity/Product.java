@@ -1,6 +1,7 @@
 package com.javaFullStackProject.e_commerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.javaFullStackProject.e_commerce.dto.ProductDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
@@ -33,4 +34,18 @@ public class Product {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Category category;
+
+
+    public ProductDto getProductDto(){
+        ProductDto productDto = new ProductDto();
+        productDto.setId(id);
+        productDto.setName(name);
+        productDto.setPrice(price);
+        productDto.setDescription(description);
+        productDto.setImg(img);
+        productDto.setCategoryName(category.getName());
+        productDto.setCategoryId(category.getId());
+
+        return productDto;
+    }
 }
