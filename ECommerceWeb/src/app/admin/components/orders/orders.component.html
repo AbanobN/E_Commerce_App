@@ -46,10 +46,10 @@
                         <mat-menu #menu="matMenu">
                             <span>
                                 <span>
-                                    <button mat-menu-item>Shipped</button>
+                                    <button mat-menu-item (click)="changeOrderStatus(order.id,'Shipped')">Shipped</button>
                                 </span>
                                 <span>
-                                    <button mat-menu-item>Deliverd</button>
+                                    <button mat-menu-item (click)="changeOrderStatus(order.id,'Delivered')">Deliverd</button>
                                 </span>
                             </span>
                         </mat-menu>
