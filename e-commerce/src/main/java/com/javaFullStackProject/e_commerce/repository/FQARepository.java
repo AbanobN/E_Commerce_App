@@ -1,0 +1,9 @@
+package com.javaFullStackProject.e_commerce.repository;
+
+import com.javaFullStackProject.e_commerce.entity.FAQ;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface FQARepository extends JpaRepository<FAQ, Long> {
+}
