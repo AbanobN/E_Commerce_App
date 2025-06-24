@@ -1,5 +1,6 @@
 package com.javaFullStackProject.e_commerce.entity;
 
+import com.javaFullStackProject.e_commerce.dto.ReviewDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
@@ -34,4 +35,18 @@ public class Review {
     private Product product;
 
 
+    public ReviewDto getDto(){
+        ReviewDto reviewDto = new ReviewDto();
+
+        reviewDto.setId(id);
+        reviewDto.setRating(rating);
+        reviewDto.setDescription(description);
+        reviewDto.setImg(img);
+        reviewDto.setUser_id(user.getId());
+        reviewDto.setUser_name(user.getName());
+        reviewDto.setProduct_id(product.getId());
+
+
+        return reviewDto;
+    }
 }
