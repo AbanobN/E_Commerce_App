@@ -18,4 +18,6 @@ public class ProductDto {
     private Long categoryId;
 
     private String categoryName;
+
+    private Long quantity;
 }
