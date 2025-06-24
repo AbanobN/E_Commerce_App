@@ -15,6 +15,12 @@ export class CustomerService {
     private http: HttpClient
   ) { }
 
+  getOrderedProducts(orderId: number): Observable<any>{
+  return this.http.get(BASIC_URL + `api/customer/ordered-products/${orderId}`,{
+    headers: this.createAuthorizationHeader()
+  });
+  }
+  
   getOrdersByUserId(): Observable<any>{
     const userId = UserStorageService.getUserId()
   return this.http.get(BASIC_URL + `api/customer/myOrders/${userId}`,{
