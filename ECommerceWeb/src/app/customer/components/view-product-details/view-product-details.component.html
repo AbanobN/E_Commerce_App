@@ -7,7 +7,7 @@
             <h2>{{product.name}}</h2>
             <p class="description">{{product.description}}</p>
             <p class="price">{{product.price | currency}}</p>
-            <p class="category">{{product.categoryName}}</p>
+            <p class="category"><b style="color: black;">Category:</b> {{product.categoryName}}</p>
         </div>
     </div>
 </div>
@@ -23,8 +23,8 @@
             <div class="review-details">
                 <h2>{{review.description}}</h2>
                 <div class="details-row">
-                    <p class="rating">Rating: {{review.rating}}</p>
-                    <p class="username">username: {{review.user_name}}</p>
+                    <p class="rating"><b style="color: black;">Rating: </b>{{review.rating}}</p>
+                    <p class="username"><b style="color: black;">username: </b>{{review.user_name}}</p>
                 </div>
             </div>
         </div>
