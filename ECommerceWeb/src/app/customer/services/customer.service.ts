@@ -15,6 +15,12 @@ export class CustomerService {
     private http: HttpClient
   ) { }
 
+  postReview(reviewDto: any): Observable<any>{
+  return this.http.post(BASIC_URL + `api/customer/review`, reviewDto,{
+    headers: this.createAuthorizationHeader()
+  });
+  }
+  
   getOrderedProducts(orderId: number): Observable<any>{
   return this.http.get(BASIC_URL + `api/customer/ordered-products/${orderId}`,{
     headers: this.createAuthorizationHeader()

@@ -56,7 +56,7 @@ public class ReviewServiceImpl implements ReviewService{
 
 
     @Override
-    public ReviewDto giveReview(ReviewDto reviewDto) {
+    public ReviewDto giveReview(ReviewDto reviewDto) throws IOException {
         Optional<Product> optionalProduct = productRepository.findById(reviewDto.getProduct_id());
         Optional<User> optionalUser = userRepository.findById(reviewDto.getUser_id());
 
@@ -66,7 +66,7 @@ public class ReviewServiceImpl implements ReviewService{
             review.setDescription(reviewDto.getDescription());
             review.setUser(optionalUser.get());
             review.setProduct(optionalProduct.get());
-            review.setImg(reviewDto.getImg());
+            review.setImg(reviewDto.getRetunedImg().getBytes());
 
             return reviewRepository.save(review).getDto();
         }
