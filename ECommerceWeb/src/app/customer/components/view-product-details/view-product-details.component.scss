@@ -1,0 +1,137 @@
+.center-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.product-card{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+
+    .product-image img{
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    h2{
+        font-size: 24px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    .description{
+        font-size: 18px;
+        color: #555;
+    }
+
+    .price{
+        font-size: 20px;
+        font-weight: bold;
+        color: #007bff;
+        margin-top: 10px;
+    }
+
+    .category{
+        font-size: 16px;
+        color: #777;
+        margin-top: 10px;
+    }
+
+    .heart-icon{
+        font-size: 24px;
+        color: #ff4081;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+}
+
+.review-list{
+    margin-top: 30px;
+
+    .review-card{
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        display: flex;
+
+        .review-image img{
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        h2{
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .review-details .details-row{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+
+            .rating, .username{
+                font-size: 16px;
+                color: #555;
+            }
+        }
+    }
+}
+
+
+.faq-list{
+    margin-top: 30px;
+
+    .faq-card{
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+
+        .faq-details{
+            display: flex;
+            justify-content: space-between;
+
+            .question, .answer{
+                font-size: 16px;
+                color: #555;
+                margin-top: 10px;
+            }
+            .question{
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .question-text , .answer-text{
+                margin-left: 20px;
+            }
+        }
+    }
+}
+
+
+.section-heading{
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #333;
+    text-align: center;
+}
+
+.small-image{
+    max-width: 80px;
+    max-height: 80px;
+}
+
