@@ -1,5 +1,6 @@
 package com.javaFullStackProject.e_commerce.entity;
 
+import com.javaFullStackProject.e_commerce.dto.WishListDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
@@ -24,4 +25,18 @@ public class WishList {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+
+    public WishListDto getWishListDto(){
+        WishListDto wishListDto = new WishListDto();
+
+        wishListDto.setId(id);
+        wishListDto.setUserId(user.getId());
+        wishListDto.setProductId(product.getId());
+        wishListDto.setProductName(product.getName());
+        wishListDto.setProductDescription(product.getDescription());
+        wishListDto.setReturnedImg(product.getImg());
+        wishListDto.setPrice(product.getPrice());
+
+        return wishListDto;
+    }
 }
