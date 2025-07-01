@@ -38,4 +38,8 @@ login(email: string, password: string): Observable<boolean> {
       })
   );
 }
+
+getOrderByTrackingId(trackingId: number): Observable<any>{
+  return this.http.get(BASIC_URL + `order/${trackingId}`)
+}
 }
