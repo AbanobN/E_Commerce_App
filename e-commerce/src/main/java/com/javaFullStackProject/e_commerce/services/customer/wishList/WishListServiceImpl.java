@@ -11,7 +11,9 @@ import com.javaFullStackProject.e_commerce.repository.WishListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +39,10 @@ public class WishListServiceImpl implements WishListService{
             return wishListRepository.save(wishList).getWishListDto();
         }
         return null;
+    }
+
+    @Override
+    public List<WishListDto> getWishListByUserId(Long userId){
+        return wishListRepository.findAllByUserId(userId).stream().map(WishList::getWishListDto).collect(Collectors.toList());
     }
 }

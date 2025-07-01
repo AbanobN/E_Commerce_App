@@ -5,10 +5,9 @@ import com.javaFullStackProject.e_commerce.services.customer.wishList.WishListSe
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,5 +25,10 @@ public class WishListController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(postedWishList);
+    }
+
+    @GetMapping("/wishlist/{userId}")
+    public ResponseEntity<List<WishListDto>> getWishListByUserId(@PathVariable Long userId){
+        return ResponseEntity.ok(wishListService.getWishListByUserId(userId));
     }
 }
