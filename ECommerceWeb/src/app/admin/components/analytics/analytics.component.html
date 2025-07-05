@@ -1,0 +1,41 @@
+<div style="padding: 30px;" *ngIf="data">
+    <app-order-by-status [data]="data"></app-order-by-status>
+</div>
+
+<div class="analytics-container" *ngIf="data">
+
+    <mat-card class="analytics-card">
+        <mat-card-header>
+            <div  mat-card-avatar class="matric-avatar">
+                O
+            </div>
+            <mat-card-title>Orders</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="matric-value">{{data.currentMonthOrders}}</div>
+            <div class="matric-subtext">Current Month</div>
+        </mat-card-content>
+        <mat-card-content class="previous-month">
+            <div class="matric-value">{{data.previousMonthOrders}}</div>
+            <div class="matric-subtext">Previous Month</div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="analytics-card">
+        <mat-card-header>
+            <div mat-card-avatar class="matric-avatar">
+                E
+            </div>
+            <mat-card-title>Earnings</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="matric-value">{{data.currentMonthEarning | currency}}</div>
+            <div class="matric-subtext">Current Month</div>
+        </mat-card-content>
+        <mat-card-content class="previous-month">
+            <div class="matric-value">{{data.previousMonthEarning | currency}}</div>
+            <div class="matric-subtext">Previous Month</div>
+        </mat-card-content>
+    </mat-card>
+
+</div>

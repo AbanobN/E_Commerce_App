@@ -12,6 +12,12 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  getAnalytics(): Observable<any>{
+    return this.http.get(BASIC_URL + `api/admin/order/analytics`, {
+      headers: this.createAuthorizationHeader()
+    })
+  }
+  
   upateProduct(productId: any ,productDto: any): Observable<any>{
     return this.http.put(BASIC_URL + `api/admin/product/${productId}`, productDto, {
       headers: this.createAuthorizationHeader()
