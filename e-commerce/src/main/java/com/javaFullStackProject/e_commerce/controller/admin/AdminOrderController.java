@@ -1,5 +1,6 @@
 package com.javaFullStackProject.e_commerce.controller.admin;
 
+import com.javaFullStackProject.e_commerce.dto.AnalyticsResponse;
 import com.javaFullStackProject.e_commerce.dto.OrderDto;
 import com.javaFullStackProject.e_commerce.services.admin.admin_order.AdminOrderService;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,10 @@ public class AdminOrderController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(orderDto);
+    }
+
+    @GetMapping("/order/analytics")
+    public ResponseEntity<AnalyticsResponse> getAnalytics(){
+        return ResponseEntity.ok(adminOrderService.calculateAnalytics());
     }
 }
